@@ -1,4 +1,4 @@
-import { View, Text, Platform, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Platform, TouchableOpacity, ScrollView, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -17,6 +17,7 @@ export default function HomeScreen() {
     const [upComing, setUpComing] = useState([])
     const [topRated, setTopRated] = useState([])
     const [loading, setLoading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false);
 
     const navigation = useNavigation()
 
@@ -56,6 +57,31 @@ export default function HomeScreen() {
         }
     }
 
+    const onRefresh = async () => {
+        setRefreshing(true);
+        setLoading(true);
+
+        setTrending([])
+        setUpComing([])
+        setTopRated([])
+
+        const data = await fetchTrendingMoviesEndpoint()
+        const dataUpcoming = await fetchUpcomingMoviesEndpoint()
+        const dataToprated = await fetchTopRatedMoviesEndpoint()
+
+        if (data && data.results && dataUpcoming.results && dataToprated.results) {
+
+            setTrending(data.results)
+            setUpComing(dataUpcoming.results)
+            setTopRated(dataToprated.results)
+
+            setLoading(false)
+        }
+
+        setRefreshing(false);
+
+    };
+
     return (
         <View className="flex-1 bg-neutral-800">
             {/* Search bar and logo */}
@@ -75,6 +101,9 @@ export default function HomeScreen() {
             {loading ? <Loading /> :
                 (
                     <ScrollView
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        }
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: 10 }}
                     >

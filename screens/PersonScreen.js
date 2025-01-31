@@ -38,7 +38,7 @@ export default function PersonScreen() {
 
     const getPersonActorMovies = async (id) => {
         const data = await fetchPersonActorMovies(id)
-        console.log('actor movies details : ', data)
+        // console.log('actor movies details : ', data)
         if (data) setPersonMovies(data.cast)
         // setLoading(false)
     }
