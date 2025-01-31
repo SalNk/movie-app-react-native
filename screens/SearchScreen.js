@@ -1,24 +1,50 @@
 import { View, Text, TextInput, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Image, Dimensions } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { XMarkIcon } from 'react-native-heroicons/outline'
 import { useNavigation } from '@react-navigation/native'
 import Loading from '../components/Loading'
+import { fallbackMoviePoster, image342, searchMovies } from '../api/moviedb'
+import { debounce } from 'lodash'
 
 var { width, height } = Dimensions.get('window');
 
 export default function SearchScreen() {
     const navigation = useNavigation();
-    const [results, setResults] = useState([1, 2, 3, 1, 2, 3])
+    const [results, setResults] = useState([])
     const [loading, setLoading] = useState(false)
 
-
     let movieName = "Ant-man and the Wasp: Quantumania"
+
+
+    const handleSearch = value => {
+        if (value && value.length > 2) {
+            setLoading(true)
+            searchMovies({
+                query: value,
+                include_adult: false,
+                language: 'en-US',
+                page: 1
+            }).then(data => {
+                setLoading(false)
+                if (data && data.results) setResults(data.results)
+                console.log('got search movies : ', data)
+            })
+        } else {
+            setLoading(false)
+            setResults([])
+        }
+
+        // handleSearch(value)
+    }
+
+    const handleTextDebounce = useCallback(debounce(handleSearch, 400), [])
 
     return (
         <SafeAreaView className="bg-neutral-800 flex-1">
             <View className="mt-2 mx-4 mb-3 flex-row justify-between items-center border border-neutral-500 rounded-full">
                 <TextInput
+                    onChangeText={handleTextDebounce}
                     placeholder='Search Movie'
                     placeholderTextColor={'gray'}
                     className="py-3 pl-6 flex-1 text-base font-semibold text-white tracking-wider"
@@ -52,10 +78,10 @@ export default function SearchScreen() {
                                                     <Image
                                                         className="rounded-3xl"
                                                         style={{ width: width * 0.44, height: height * 0.3 }}
-                                                        source={require('../assets/images/moviesPoster2.jpeg')}
+                                                        source={{ uri: image342(result.poster_path) || fallbackMoviePoster }}
                                                     />
                                                     <Text className="text-neutral-300 ml-1">
-                                                        {movieName.length > 20 ? movieName.slice(0, 20) + '...' : movieName}
+                                                        {result.title.length > 20 ? result.title.slice(0, 20) + '...' : result.title}
                                                     </Text>
                                                 </View>
                                             </TouchableWithoutFeedback>

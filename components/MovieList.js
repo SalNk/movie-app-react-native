@@ -45,7 +45,7 @@ export default function MovieList({ title, data, hideSeeAll }) {
                                         style={{ width: width * 0.3, height: height * 0.22 }}
                                     />
                                     <Text className="text-neutral-300 ml-1">
-                                        {/* {movie.title.length > 14 ? movie.title.slice(0, 13) + '...' : movie.title} */}
+                                        {movie.title?.length > 14 ? movie.title.slice(0, 13) + '...' : movie?.title}
                                     </Text>
                                 </View>
                             </TouchableWithoutFeedback>

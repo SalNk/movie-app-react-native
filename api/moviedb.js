@@ -2,21 +2,27 @@ import axios from "axios";
 import { apiKey } from "../constants";
 
 
-const apiBaseUrl = 'https://api.themoviedb.org'
-const trendingMoviesEndpoint = `${apiBaseUrl}/3/trending/movie/day?api_key=${apiKey}`
-const upcomingMoviesEndpoint = `${apiBaseUrl}/3/movie/upcoming?api_key=${apiKey}`
-const topRatedMoviesEndpoint = `${apiBaseUrl}/3/movie/top_rated?api_key=${apiKey}`
+const apiBaseUrl = 'https://api.themoviedb.org/3'
+const trendingMoviesEndpoint = `${apiBaseUrl}/trending/movie/day?api_key=${apiKey}`
+const upcomingMoviesEndpoint = `${apiBaseUrl}/movie/upcoming?api_key=${apiKey}`
+const topRatedMoviesEndpoint = `${apiBaseUrl}/movie/top_rated?api_key=${apiKey}`
+export const searchMoviesEndpoint = `${apiBaseUrl}/search/movie?api_key=${apiKey}`
+
 
 export const image500 = path => path ? `https://image.tmdb.org/t/p/w500/${path}` : null
 export const image342 = path => path ? `https://image.tmdb.org/t/p/w342/${path}` : null
 export const image185 = path => path ? `https://image.tmdb.org/t/p/w185/${path}` : null
 
 export const fallbackMoviePoster = 'https://img.freepik.com/premium-psd/mystery-movie-posters_1117895-396.jpg?uid=R68126319&ga=GA1.1.452966945.1711439910&semt=ais_hybrid_sidr';
-export const fallbackPersonImage = 'https://img.freepik.com/premium-psd/event-flyer-design-template_528542-1673.jpg?uid=R68126319&ga=GA1.1.452966945.1711439910&semt=ais_hybrid_sidr';
+export const fallbackPersonImage = 'https://img.freepik.com/premium-vector/user-profile-people-icon-isolated-white-background_322958-4540.jpg?uid=R68126319&ga=GA1.1.452966945.1711439910&semt=ais_hybrid_sidr';
 
-export const movieDetailsEndPoint = id => `${apiBaseUrl}/3/movie/${id}?api_key=${apiKey}`
-export const similarMoviesEndPoint = id => `${apiBaseUrl}/3/movie/${id}/similar?api_key=${apiKey}`
-export const movieCreditsEndPoint = credit_id => `${apiBaseUrl}/3/credit/${credit_id}?api_key=${apiKey}`
+export const movieDetailsEndPoint = id => `${apiBaseUrl}/movie/${id}?api_key=${apiKey}`
+export const similarMoviesEndPoint = id => `${apiBaseUrl}/movie/${id}/similar?api_key=${apiKey}`
+export const movieCreditsEndPoint = id => `${apiBaseUrl}/movie/${id}/credits?api_key=${apiKey}`
+
+export const personActorDetails = id => `${apiBaseUrl}/person/${id}?api_key=${apiKey}`
+export const personActorMovies = id => `${apiBaseUrl}/person/${id}/movie_credits?api_key=${apiKey}`
+
 
 const apiCall = async (endpoint, params) => {
     const options = {
@@ -54,6 +60,17 @@ export const fetchMovieDetailsEndPoint = (id) => {
 export const fetchSimilarMoviesEndPoint = (id) => {
     return apiCall(similarMoviesEndPoint(id))
 }
-export const fetchMovieCreditsEndPoint = (credit_id) => {
-    return apiCall(movieCreditsEndPoint(credit_id))
+export const fetchMovieCreditsEndPoint = (id) => {
+    return apiCall(movieCreditsEndPoint(id))
+}
+
+export const fetchPersonActorDetails = (id) => {
+    return apiCall(personActorDetails(id))
+}
+export const fetchPersonActorMovies = (id) => {
+    return apiCall(personActorMovies(id))
+}
+
+export const searchMovies = params => {
+    return apiCall(searchMoviesEndpoint, params)
 }

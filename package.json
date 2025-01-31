@@ -17,6 +17,7 @@
     "expo": "~52.0.28",
     "expo-linear-gradient": "^14.0.2",
     "expo-status-bar": "~2.0.1",
+    "lodash": "^4.17.21",
     "nativewind": "^4.1.23",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",

@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Cast from '../components/Cast';
 import MovieList from '../components/MovieList';
 import Loading from '../components/Loading';
-import { fallbackMoviePoster, fetchMovieDetailsEndPoint, image500 } from '../api/moviedb';
+import { fallbackMoviePoster, fetchMovieCreditsEndPoint, fetchMovieDetailsEndPoint, fetchSimilarMoviesEndPoint, image500 } from '../api/moviedb';
 
 var { width, height } = Dimensions.get('window');
 const ios = Platform.OS === 'ios'
@@ -28,15 +28,28 @@ export default function MovieScreen() {
     let movieName = "Ant-man and the Wasp: Quantumania"
 
     useEffect(() => {
-        // console.log('data : ', movie.id)
-        console.log(movieDetails?.release_date)
-
+        getMovieDetails(movie.id)
         getSimilarMovies(movie.id)
-    }, movie)
+        getMovieCredits(movie.id)
+    }, [movie])
 
-    const getSimilarMovies = async (id) => {
+    const getMovieDetails = async (id) => {
         const data = await fetchMovieDetailsEndPoint(id)
         if (data) setMovieDetails(data)
+        setLoading(false)
+    }
+
+    const getSimilarMovies = async (id) => {
+        const data = await fetchSimilarMoviesEndPoint(id)
+        // console.log('similar movies ', data)
+        if (data && data.results) setSimilarMovies(data.results)
+        setLoading(false)
+    }
+
+    const getMovieCredits = async (id) => {
+        const data = await fetchMovieCreditsEndPoint(id)
+        // console.log('credits : ', data)
+        if (data && data.cast) setCast(data.cast)
         setLoading(false)
     }
 
@@ -81,7 +94,7 @@ export default function MovieScreen() {
                                 <View className="flex-row justify-center mx-8 gap-x-4 flex-wrap">
                                     {
                                         movieDetails?.genres?.map((genre, index) => {
-                                            let showDot = index + 1 != movieDetails.genre?.length
+                                            let showDot = index + 1 != movieDetails.genres?.length
                                             return (
                                                 <Text key={genre.id} className="text-neutral-400 font-semibold text-base text-center">
                                                     {genre.name}{showDot && "    •"}
