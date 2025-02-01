@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "movie-app-react-native",
+    "name": "Movie App",
     "slug": "movie-app-react-native",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,11 +19,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.salem_nkwey.movieappreactnative"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "59fc9646-2021-45f1-864c-7f5930533945"
+      }
+    },
+    "owner": "salem_nkwey"
   }
 }
